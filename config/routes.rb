@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       resources :penguins
       resources :games
       resources :cards
+      resources :penguin_pictures
     end
   end
 
