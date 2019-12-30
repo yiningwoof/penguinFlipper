@@ -60,26 +60,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	async function assignPenguinsToCards() {
 		const penguinIds = await fetchEightPenguins();
-		penguinIds.forEach((penguinId) => {
-			let imageURL = getOnePenguinPicURL(penguinId);
+		console.log(penguinIds);
 
-			firstCardIndex = Math.floor(Math.random() * cardIndices.length);
-			secondCardIndex = Math.floor(Math.random() * cardIndices.length);
-			while (firstCardIndex === secondCardIndex) {
-				secondCardIndex = Math.floor(Math.random() * 16);
+		penguinIds.forEach(async (penguinId) => {
+			let imageURL = await getOnePenguinPicURL(penguinId);
+
+			let firstCardIndexIndex = Math.floor(Math.random() * cardIndices.length);
+			let secondCardIndexIndex = Math.floor(Math.random() * cardIndices.length);
+			while (firstCardIndexIndex === secondCardIndexIndex) {
+				secondCardIndexIndex = Math.floor(Math.random() * cardIndices.length);
 			}
-			firstCard = cards[firstCardIndex];
-			secondCard = cards[secondCardIndex];
-			let firstIdIndex = cardIndices.indexOf(firstCardIndex);
-			if (firstIdIndex !== -1) cardIndices.splice(firstIdIndex, 1);
-			let secondIdIndex = cardIndices.indexOf(secondCardIndex);
-			if (secondIdIndex !== -1) cardIndices.splice(secondIdIndex, 1);
+			let firstCardIndex = cardIndices[firstCardIndexIndex];
+			let secondCardIndex = cardIndices[secondCardIndexIndex];
 
+			let firstCard = cards[firstCardIndex];
+			let secondCard = cards[secondCardIndex];
+
+			// let firstIdIndex = cardIndices.indexOf(firstCardIndex);
+			cardIndices.splice(firstCardIndex, 1);
+			// let secondIdIndex = cardIndices.indexOf(secondCardIndex);
+			cardIndices.splice(secondCardIndex, 1);
+			console.log(penguinId);
 			firstCard.setAttribute('penguin_id', penguinId);
 			secondCard.setAttribute('penguin_id', penguinId);
-			let front_image = firstCard.querySelector('img.front-face');
-			front_image.setAttribute('src', imageURL);
+			let first_front_image = firstCard.querySelector('img.front-face');
+			first_front_image.setAttribute('src', imageURL);
+			let second_front_image = secondCard.querySelector('img.front-face');
+			second_front_image.setAttribute('src', imageURL);
 			console.log(firstCard);
+			console.log(secondCard);
 		});
 	}
 
@@ -91,7 +100,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		const imageArr = json['penguin_pics'];
 		let i = Math.floor(Math.random() * imageArr.length);
 		const imageURL = imageArr[i];
-		console.log(typeof imageURL);
+		console.log(imageURL);
 		return imageURL;
 	}
 
