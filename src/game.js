@@ -4,13 +4,17 @@ window.addEventListener('DOMContentLoaded', () => {
 	const cards = document.querySelectorAll('.card');
 	const cardIndices = [...Array(16).keys()];
 
-	async function flipCard() {
+	async function startGame() {
 		await assignPenguinsToCards();
-		// console.log(document.querySelectorAll('.card'));
+		showAllCards();
+		// cards.forEach((card) => {
+		// 	card.addEventListener('click', flip);
+		// });
+	}
 
-		cards.forEach((card) => {
-			card.addEventListener('click', flip);
-		});
+	function showAllCards() {
+		cards.forEach((card) => card.classList.toggle('flip'));
+		progressCountDown(5, 5);
 	}
 
 	function flip() {
@@ -111,27 +115,35 @@ window.addEventListener('DOMContentLoaded', () => {
 		return a;
 	}
 
-	flipCard();
-
 	// FAITH
 
-	ProgressCountdown(
-		30,
-		'pageBeginCountdown',
-		'pageBeginCountdownText'
-	).then((value) =>
-		alert(`game over! should pass function to shuffle new cards`)
-	);
+	// progressCountDown(
+	// 	30,
+	// 	'pageBeginCountdown',
+	// 	'pageBeginCountdownText'
+	// ).then((value) =>
+	// 	alert(`game over! should pass function to shuffle new cards`)
+	// );
 
-	function ProgressCountdown(timeleft, bar, text) {
+	function progressCountDown(timeleft, maxTime) {
 		return new Promise((resolve) => {
+			let timerDiv = document.getElementById('timer-bar');
+
+			let progressBar = document.createElement('progress');
+			progressBar.max = maxTime;
+			timerDiv.appendChild(progressBar);
+
+			let timeText = document.createElement('p');
+			timeText.innerHTML = `Timer ${timeleft} seconds`;
+			timerDiv.appendChild(timeText);
+
 			var countdownTimer = setInterval(() => {
 				timeleft--;
 
-				document.getElementById(bar).value = timeleft;
-				document.getElementById(text).textContent = timeleft;
+				progressBar.value = timeleft;
+				timeText.innerHTML = `Timer ${timeleft} seconds`;
 
-				if (timeleft < 0) {
+				if (timeleft < 1) {
 					clearInterval(countdownTimer);
 					resolve(true);
 				}
@@ -140,4 +152,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// FAITH
+
+	startGame();
 });
