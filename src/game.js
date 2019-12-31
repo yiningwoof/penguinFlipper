@@ -58,41 +58,41 @@ window.addEventListener('DOMContentLoaded', () => {
 		return eightIds;
 	}
 
-	async function assignPenguinsToCards() {
+	async function getRandomIdURLs() {
 		const penguinIds = await fetchEightPenguins();
-		console.log(penguinIds);
-
-		penguinIds.forEach(async (penguinId) => {
-			let imageURL = await getOnePenguinPicURL(penguinId);
-
-			let firstCardIndexIndex = Math.floor(Math.random() * cardIndices.length);
-			let secondCardIndexIndex = Math.floor(Math.random() * cardIndices.length);
-			while (firstCardIndexIndex === secondCardIndexIndex) {
-				secondCardIndexIndex = Math.floor(Math.random() * cardIndices.length);
-			}
-			let firstCardIndex = cardIndices[firstCardIndexIndex];
-			let secondCardIndex = cardIndices[secondCardIndexIndex];
-
-			let firstCard = cards[firstCardIndex];
-			let secondCard = cards[secondCardIndex];
-
-			// let firstIdIndex = cardIndices.indexOf(firstCardIndex);
-			cardIndices.splice(firstCardIndex, 1);
-			// let secondIdIndex = cardIndices.indexOf(secondCardIndex);
-			cardIndices.splice(secondCardIndex, 1);
-			console.log(penguinId);
-			firstCard.setAttribute('penguin_id', penguinId);
-			secondCard.setAttribute('penguin_id', penguinId);
-			let first_front_image = firstCard.querySelector('img.front-face');
-			first_front_image.setAttribute('src', imageURL);
-			let second_front_image = secondCard.querySelector('img.front-face');
-			second_front_image.setAttribute('src', imageURL);
-			console.log(firstCard);
-			console.log(secondCard);
-		});
+		const penguinURLs = await fetchEightImageURLs(penguinIds);
+		const idURLs8 = [];
+		for (let i = 0; i < penguinIds.length; i++) {
+			const pair = {};
+			pair['id'] = penguinIds[i];
+			pair['url'] = await getOneImageURL(penguinIds[i]);
+			idURLs8.push(pair);
+		}
+		const idURLs16 = idURLs8.concat(idURLs8);
+		const shuffled = shuffle(idURLs16);
+		return shuffled;
 	}
 
-	async function getOnePenguinPicURL(penguinId) {
+	async function assignPenguinsToCards() {
+		const idURLs = await getRandomIdURLs();
+		for (let i = 0; i < idURLs.length; i++) {
+			const card_front_face = cards[i].querySelector('img.front-face');
+			card_front_face.setAttribute('penguin_id', idURLs[i]['id']);
+			card_front_face.setAttribute('src', idURLs[i]['url']);
+			console.log(cards[i]);
+		}
+	}
+
+	async function fetchEightImageURLs(penguinIds) {
+		const penguinURLs = [];
+		for (let i = 0; i < penguinIds.length; i++) {
+			const penguinURL = await getOneImageURL(penguinIds[i]);
+			penguinURLs.push(penguinURL);
+		}
+		return penguinURLs;
+	}
+
+	async function getOneImageURL(penguinId) {
 		const res = await fetch(
 			`http://localhost:3000/api/v1/penguin_pictures/${penguinId}`
 		);
@@ -100,8 +100,15 @@ window.addEventListener('DOMContentLoaded', () => {
 		const imageArr = json['penguin_pics'];
 		let i = Math.floor(Math.random() * imageArr.length);
 		const imageURL = imageArr[i];
-		console.log(imageURL);
 		return imageURL;
+	}
+
+	function shuffle(a) {
+		for (let i = a.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[a[i], a[j]] = [a[j], a[i]];
+		}
+		return a;
 	}
 
 	flipCard();
