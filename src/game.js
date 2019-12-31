@@ -115,27 +115,29 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	// FAITH
 
-	ProgressCountdown(5, 'pageBeginCountdown', 'pageBeginCountdownText')
-	.then(value => alert(`game over! should pass function to shuffle new cards`));
+	ProgressCountdown(
+		30,
+		'pageBeginCountdown',
+		'pageBeginCountdownText'
+	).then((value) =>
+		alert(`game over! should pass function to shuffle new cards`)
+	);
 
 	function ProgressCountdown(timeleft, bar, text) {
-	  return new Promise((resolve) => {
-		var countdownTimer = setInterval(() => {
-		  timeleft--;
-	
-		  document.getElementById(bar).value = timeleft;
-		  document.getElementById(text).textContent = timeleft;
-	
-		  if (timeleft < 0) {
-			clearInterval(countdownTimer); 
-			resolve(true);
-		  }
-		}, 1000);
-	  });
+		return new Promise((resolve) => {
+			var countdownTimer = setInterval(() => {
+				timeleft--;
+
+				document.getElementById(bar).value = timeleft;
+				document.getElementById(text).textContent = timeleft;
+
+				if (timeleft < 0) {
+					clearInterval(countdownTimer);
+					resolve(true);
+				}
+			}, 1000);
+		});
 	}
 
-
-
-// 	// FAITH
-		
+	// FAITH
 });
