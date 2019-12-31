@@ -16,9 +16,13 @@ body {
 	margin: auto;
 	display: flex;
 	flex-wrap: wrap;
+	perspective: 1000px;
 }
 
-.front-face,
+.front-face {
+	transform: rotateY(180deg);
+}
+
 .back-face {
 	width: 100%;
 	height: 100%;
@@ -26,6 +30,7 @@ body {
 	position: absolute;
 	border-radius: 1px;
 	background: #1c7ccc;
+	backface-visibility: hidden;
 }
 
 .card {
@@ -36,6 +41,14 @@ body {
 	transform-style: preserve-3d;
 	box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
 	transform: scale(1);
+	transform-style: preserve-3d;
+	transition: transform 0.5s;
+}
+
+.card img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .card.flip {
