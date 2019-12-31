@@ -10,15 +10,18 @@
 </head>
 
 <body>
-  <h1>Penguin Flipper </h1><br>
+  <div class="header-container">
+  <h1 class="page-title">Penguin Flipper </h1><br>
   <div class="row begin-countdown">
     <div class="col-md-12 text-center">
       <progress value="30" max="30" id="pageBeginCountdown"></progress>
       <p> timer <span id="pageBeginCountdownText">30 </span> seconds</p>
     </div>
   </div>
+</div>
 
-  <section class="memory-game">
+
+  <div class="memory-game">
     <div class="card">
       <img class="front-face" />
       <img class="back-face" src="https://cdn.dribbble.com/users/113499/screenshots/6971887/penguin.png" alt="cartoon_penguin" />
@@ -90,8 +93,8 @@
       <img class="front-face" />
       <img class="back-face" src="../storage/card_face.png" alt="cartoon_penguin" />
     </div>
-  </section>
-
+  </div>
+  <div class="footer-container">put cards in here </div>
   <script src="game.js"></script>
 </body>
 

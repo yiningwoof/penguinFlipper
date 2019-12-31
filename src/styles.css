@@ -10,6 +10,14 @@ body {
 	background: #2f2f33;
 }
 
+.header-container{
+	text-align: center;
+	background:#DB8A8A; 
+	height: 200px;
+	position: fixed;
+	width: 100%;
+}
+
 .memory-game {
 	width: 640px;
 	height: 640px;
@@ -45,4 +53,12 @@ body {
 .card:active {
 	transform: scale(0.97);
 	transition: transform 0.2s;
+}
+.footer-container{ 
+	background:#DB8A8A; 
+	bottom: 0;
+clear: both;
+height: 200px;
+position: fixed;
+width: 100%;
 }
