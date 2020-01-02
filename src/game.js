@@ -1,24 +1,71 @@
 window.addEventListener('DOMContentLoaded', () => {
 	const penguinsURL = 'http://localhost:3000/api/v1/penguins';
 	// let penguinIds; // eight ids in random order
+	const penguinURLs = [];
+
 	const cards = document.querySelectorAll('.card');
+	let clickCount = 0;
+	let testMatch = [];
+	let twoElements = [];
+	let matchedIds = [];
+
 	const cardIndices = [...Array(16).keys()];
+	// const headerContainer = document.querySelector('.header-container');
+	const row_begin_countdown = document.querySelector('.row-begin-countdown');
+	const startButton = document.querySelector('#btn-start-game');
+	startButton.addEventListener('click', startGame);
 
 	async function startGame() {
 		await assignPenguinsToCards();
 		showAllCards();
-		// cards.forEach((card) => {
-		// 	card.addEventListener('click', flip);
-		// });
 	}
 
 	function showAllCards() {
-		cards.forEach((card) => card.classList.toggle('flip'));
+		flipCards();
 		progressCountDown(5, 5);
+		clickCountText = document.createElement('p');
+		clickCountText.className = 'click-count';
+		row_begin_countdown.appendChild(clickCountText);
+		clickCountText.textContent = `Click Count: ${clickCount}`;
+	}
+
+	function flipCards() {
+		cards.forEach((card) => card.classList.toggle('flip'));
 	}
 
 	function flip() {
 		this.classList.toggle('flip');
+		clickCount += 1;
+		clickCountText = document.querySelector('.click-count');
+		clickCountText.textContent = `Click Count: ${clickCount}`;
+		currentCardPenguinId = this.getAttribute('penguin_id');
+		twoElements.push(this);
+		testMatch.push(currentCardPenguinId);
+		timeOut1s = window.setTimeout(evaluateMatch, 1000);
+
+		console.log(clickCount);
+	}
+
+	function evaluateMatch() {
+		if (testMatch.length === 2) {
+			if (testMatch[0] === testMatch[1]) {
+				matchedIds.push(testMatch[0]);
+				// twoMatches = document.querySelectorAll(
+				// 	`[penguin_id='${testMatch[0]}']`
+				// );
+
+				twoElements.forEach((card) => card.remove());
+				testMatch.splice(0, 2);
+				twoElements.splice(0, 2);
+				console.log(matchedIds);
+			} else if (testMatch[0] !== testMatch[1]) {
+				// noMatches = document.querySelectorAll(`[penguin_id='${testMatch[0]}']`);
+
+				twoElements.forEach((card) => card.classList.toggle('flip'));
+				testMatch.splice(0, 2);
+				twoElements.splice(0, 2);
+			}
+		}
 	}
 
 	async function fetchEightPenguins() {
@@ -27,21 +74,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		const json = await res.json();
 		const penguinIds = selectEightPenguins(json);
 		return penguinIds;
-		// return new Promise((resolve, reject) => {
-		// 	fetch(penguinsURL)
-		// 		.then((res) => res.json())
-		// 		.then((json) => {
-		// 			// console.log(selectEightPenguins(json));
-		// 			penguinIds = selectEightPenguins(json);
-		// 			// console.log(penguinIds);
-		// 		});
-		// 	const error = false;
-		// 	if (!error) {
-		// 		resolve();
-		// 	} else {
-		// 		reject('something went wrong!');
-		// 	}
-		// });
 	}
 
 	function selectEightPenguins(json) {
@@ -81,14 +113,12 @@ window.addEventListener('DOMContentLoaded', () => {
 		const idURLs = await getRandomIdURLs();
 		for (let i = 0; i < idURLs.length; i++) {
 			const card_front_face = cards[i].querySelector('img.front-face');
-			card_front_face.setAttribute('penguin_id', idURLs[i]['id']);
+			card_front_face.parentNode.setAttribute('penguin_id', idURLs[i]['id']);
 			card_front_face.setAttribute('src', idURLs[i]['url']);
-			console.log(cards[i]);
 		}
 	}
 
 	async function fetchEightImageURLs(penguinIds) {
-		const penguinURLs = [];
 		for (let i = 0; i < penguinIds.length; i++) {
 			const penguinURL = await getOneImageURL(penguinIds[i]);
 			penguinURLs.push(penguinURL);
@@ -125,33 +155,51 @@ window.addEventListener('DOMContentLoaded', () => {
 	// 	alert(`game over! should pass function to shuffle new cards`)
 	// );
 
-	function progressCountDown(timeleft, maxTime) {
+	function progressCountDown(timeLeft, maxTime) {
 		return new Promise((resolve) => {
 			let timerDiv = document.getElementById('timer-bar');
+
+			while (timerDiv.firstChild) {
+				timerDiv.removeChild(timerDiv.firstChild);
+			}
 
 			let progressBar = document.createElement('progress');
 			progressBar.max = maxTime;
 			timerDiv.appendChild(progressBar);
 
 			let timeText = document.createElement('p');
-			timeText.innerHTML = `Timer ${timeleft} seconds`;
+			timeText.innerHTML = `Timer ${timeLeft} seconds`;
 			timerDiv.appendChild(timeText);
 
 			var countdownTimer = setInterval(() => {
-				timeleft--;
+				timeLeft--;
 
-				progressBar.value = timeleft;
-				timeText.innerHTML = `Timer ${timeleft} seconds`;
+				progressBar.value = timeLeft;
+				timeText.innerHTML = `Timer ${timeLeft} seconds`;
 
-				if (timeleft < 1) {
+				if (timeLeft < 1) {
 					clearInterval(countdownTimer);
+					flipCards();
+					if (maxTime === 5) {
+						timeOut1s = window.setTimeout(startMatching, 1000);
+					}
 					resolve(true);
 				}
 			}, 1000);
 		});
 	}
 
-	// FAITH
+	function startMatching() {
+		progressCountDown(30, 30);
 
-	startGame();
+		cards.forEach((card) => {
+			card.addEventListener('click', flip);
+		});
+
+		if (clickCount === 50) {
+			alert("toooooo many clicks! you're out!");
+		}
+	}
+
+	// FAITH
 });
