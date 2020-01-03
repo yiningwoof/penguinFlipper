@@ -22,7 +22,13 @@ window.addEventListener('DOMContentLoaded', () => {
 	const matchedContainer = document.querySelector('.matched-container');
 
 	startButton.addEventListener('click', startGame);
-	newGameButton.addEventListener('click', startGame)
+	newGameButton.addEventListener('click', startNewGame);
+
+	async function startNewGame() {
+		window.location.reload(true);
+		await assignPenguinsToCards();
+		showAllCards();
+	}
 
 	async function startGame() {
 		await assignPenguinsToCards();
@@ -62,7 +68,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			if (testMatch[0] === testMatch[1]) {
 				matchedIds.push(testMatch[0]);
 				twoElements.forEach((card) => card.remove());
-				if (document.querySelectorAll(".card").length === 0) {
+				if (document.querySelectorAll('.card').length === 0) {
 					timerText = document.querySelector('progress').value;
 					score = calculateScore(matchedIds.length, timerText, clickCount);
 					while (rowBeginCountdown.firstChild) {
@@ -80,7 +86,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 					let clickCountElement = document.createElement('h3');
 					clickCountElement.textContent = `Total mouse clicks: ${clickCount}`;
-					
+
 					rowBeginCountdown.appendChild(timerElement);
 					rowBeginCountdown.appendChild(matchesElement);
 					rowBeginCountdown.appendChild(clickCountElement);
@@ -243,8 +249,12 @@ window.addEventListener('DOMContentLoaded', () => {
 					if (maxTime === 30) {
 						if (score === 0) {
 							score = calculateScore(matchedIds.length, 0, clickCount);
-							alert("Time is up!")
+							alert('Time is up!');
 							cards.forEach((card) => card.removeEventListener('click', flip));
+							const unflipped = document.querySelectorAll('.card:not(.flip)');
+							if (unflipped.length !== 0) {
+								unflipped.forEach((card) => card.classList.toggle('flip'));
+							}
 							while (rowBeginCountdown.firstChild) {
 								rowBeginCountdown.removeChild(rowBeginCountdown.firstChild);
 							}
@@ -255,13 +265,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
 							let timerElement = document.createElement('h3');
 							timerElement.textContent = `Time left: ${timerText} s`;
-		
+
 							let matchesElement = document.createElement('h3');
 							matchesElement.textContent = `Total matches: ${matchedIds.length}`;
-		
+
 							let clickCountElement = document.createElement('h3');
 							clickCountElement.textContent = `Total mouse clicks: ${clickCount}`;
-							
+
 							rowBeginCountdown.appendChild(timerElement);
 							rowBeginCountdown.appendChild(matchesElement);
 							rowBeginCountdown.appendChild(clickCountElement);
