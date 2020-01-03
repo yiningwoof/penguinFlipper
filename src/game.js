@@ -1,5 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
+	let userName = '';
 	const penguinsURL = 'http://localhost:3000/api/v1/penguins';
+	const gamesURL = 'http://localhost:3000/api/v1/games';
 	// let penguinIds; // eight ids in random order
 	const penguinIdURLs = {};
 	const penguinInfo = {};
@@ -276,12 +278,31 @@ window.addEventListener('DOMContentLoaded', () => {
 							rowBeginCountdown.appendChild(matchesElement);
 							rowBeginCountdown.appendChild(clickCountElement);
 							rowBeginCountdown.appendChild(scoreText);
+
+							postScore();
 						}
 					}
 					resolve(true);
 				}
 			}, 1000);
 		});
+	}
+
+	function postScore() {
+		let data = {
+			username: userName,
+			score: score
+		};
+		fetch(gamesURL, {
+			method: 'POST',
+			body: JSON.stringify(data),
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			}
+		})
+			.then((res) => res.json())
+			.then(console.log);
 	}
 
 	function startMatching() {
@@ -295,24 +316,35 @@ window.addEventListener('DOMContentLoaded', () => {
 			alert("toooooo many clicks! you're out!");
 		}
 	}
-	
-//modal info
-const modal = document.getElementById("myModal");
-// Get the <span> element that closes the modal
-const span = document.getElementsByClassName("close")[0];
-//const submit = document.getElementById("user-form");
 
-    function getModal() {
-        window.onload = function(){
-  modal.style.display = "block";
-}
-    
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-  };
-}
-    
-getModal();
+	//modal info
+	const modal = document.getElementById('myModal');
+	// Get the <span> element that closes the modal
+	const span = document.getElementsByClassName('close')[0];
+	//const submit = document.getElementById("user-form");
+	const loginForm = document.getElementById('login-form');
 
-});//dom window load
+	function getModal() {
+		window.onload = function() {
+			modal.style.display = 'block';
+		};
+
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+			modal.style.display = 'none';
+		};
+	}
+
+	function userLogin(event) {
+		event.preventDefault();
+		const userNameInput = document.querySelector('#username');
+		userName = userNameInput.value;
+		modal.style.display = 'none';
+		const welcomeMessage = document.querySelector('#welcome');
+		welcomeMessage.textContent = `Welcome, ${userName}!`;
+	}
+
+	loginForm.addEventListener('submit', userLogin);
+
+	getModal();
+}); //dom window load
