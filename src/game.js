@@ -287,4 +287,25 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// FAITH
+	//modal info
+const modal = document.getElementById("myModal");
+// Get the <span> element that closes the modal
+const span = document.getElementsByClassName("close")[0];
+//const submit = document.getElementById("user-form");
+
+    function getModal() {
+        window.onload = function(){
+  modal.style.display = "block";
+}
+    
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+  };
+}
+    
+getModal();
+
+});//dom window load
+
 });
