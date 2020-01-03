@@ -28,12 +28,35 @@
     </div>
   </div>
 
+  <div id="rank-board-modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="rank-board">
+      <span class="close" id="rank-board-close">&times;</span>
+      <h3>Check out the ranks</h3> <br>
+      <table id="rank-board-table">
+        <tr>
+          <th>Username</th>
+          <th>Score</th>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
 
   <div class="game-page">
     <div class="header-container">
       <h1 class="page-title">Penguin Flipper</h1><br>
       <button id="btn-start-game">Start Game</button>
+      <button id="btn-new-game">Start Over</button>
+      <button id="btn-switch-user">Switch User</button>
+      <button id="btn-show-rank">Show Rank Board</button>
       <button id="btn-new-game">Start Over</button><br><br>
+      <div class="row-begin-countdown">
+        <div class="col-md-12" id="timer-bar">
+        </div>
+      
       <div class="col-md-12-center" id="timer-bar">
       </div>
     </div>

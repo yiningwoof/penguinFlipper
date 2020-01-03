@@ -5,6 +5,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	// let penguinIds; // eight ids in random order
 	const penguinIdURLs = {};
 	const penguinInfo = {};
+	const topFive = {};
 
 	const cards = document.querySelectorAll('.card');
 	let clickCount = 0;
@@ -21,13 +22,41 @@ window.addEventListener('DOMContentLoaded', () => {
 	const rowBeginCountdown = document.querySelector('.row-begin-countdown');
 	const startButton = document.querySelector('#btn-start-game');
 	const newGameButton = document.querySelector('#btn-new-game');
+	const switchUserButton = document.querySelector('#btn-switch-user');
+	const rankBoardButton = document.querySelector('#btn-show-rank');
 	const matchedContainer = document.querySelector('.matched-container');
+
+	//modal info
+	const modal = document.getElementById('myModal');
+	// Get the <span> element that closes the modal
+	const span = document.getElementsByClassName('close')[0];
+	//const submit = document.getElementById("user-form");
+	const loginForm = document.getElementById('login-form');
+
+	const rankModal = document.getElementById('rank-board-modal');
+	const rankModalClose = document.getElementById('rank-board-close');
+	const rankModalTable = document.querySelector('#rank-board-table');
 
 	startButton.addEventListener('click', startGame);
 	newGameButton.addEventListener('click', startNewGame);
+	switchUserButton.addEventListener('click', switchUser);
+	rankBoardButton.addEventListener('click', showRankBoard);
+	loginForm.addEventListener('submit', userLogin);
 
 	async function startNewGame() {
+		modal.style.display = 'none';
+		let keepUserName = userName;
+		console.log(keepUserName);
 		window.location.reload(true);
+		userName = keepUserName;
+		console.log(userName);
+		await assignPenguinsToCards();
+		showAllCards();
+	}
+
+	async function switchUser() {
+		window.location.reload(true);
+		getUserLoginModal();
 		await assignPenguinsToCards();
 		showAllCards();
 	}
@@ -93,6 +122,8 @@ window.addEventListener('DOMContentLoaded', () => {
 					rowBeginCountdown.appendChild(matchesElement);
 					rowBeginCountdown.appendChild(clickCountElement);
 					rowBeginCountdown.appendChild(scoreText);
+
+					postScore();
 				}
 
 				let newMatch = document.createElement('div');
@@ -210,16 +241,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		return a;
 	}
 
-	// FAITH
-
-	// progressCountDown(
-	// 	30,
-	// 	'pageBeginCountdown',
-	// 	'pageBeginCountdownText'
-	// ).then((value) =>
-	// 	alert(`game over! should pass function to shuffle new cards`)
-	// );
-
 	function progressCountDown(timeLeft, maxTime) {
 		return new Promise((resolve) => {
 			let timerDiv = document.getElementById('timer-bar');
@@ -300,9 +321,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				Accept: 'application/json',
 				'Content-Type': 'application/json'
 			}
-		})
-			.then((res) => res.json())
-			.then(console.log);
+		});
 	}
 
 	function startMatching() {
@@ -317,14 +336,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	//modal info
-	const modal = document.getElementById('myModal');
-	// Get the <span> element that closes the modal
-	const span = document.getElementsByClassName('close')[0];
-	//const submit = document.getElementById("user-form");
-	const loginForm = document.getElementById('login-form');
-
-	function getModal() {
+	function getUserLoginModal() {
 		window.onload = function() {
 			modal.style.display = 'block';
 		};
@@ -344,7 +356,31 @@ window.addEventListener('DOMContentLoaded', () => {
 		welcomeMessage.textContent = `Welcome, ${userName}!`;
 	}
 
-	loginForm.addEventListener('submit', userLogin);
+	function showRankBoard() {
+		const ranks = {};
+		rankBoardButton.onclick = function() {
+			rankModal.style.display = 'block';
+		};
+		// <tr>
+		// 	<td>Bob</td>
+		// 	<td>Yellow</td>
+		// </tr>;
+		fetch(gamesURL)
+			.then((res) => res.json())
+			.then(getTopFive);
+		// rankModalTable.appendChild()
+		rankModalClose.onclick = function() {
+			rankModal.style.display = 'none';
+		};
+	}
 
-	getModal();
+	function getTopFive(json) {
+		json.sort((a, b) => {
+			return b.score - a.score;
+		});
+		console.log(json.slice(0, 5));
+	}
+
+	getUserLoginModal();
+	showRankBoard();
 }); //dom window load
