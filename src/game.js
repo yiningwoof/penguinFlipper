@@ -200,6 +200,3 @@ window.addEventListener('DOMContentLoaded', () => {
 			alert("toooooo many clicks! you're out!");
 		}
 	}
-
-	// FAITH
-});
