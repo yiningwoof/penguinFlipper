@@ -105,17 +105,17 @@ window.addEventListener('DOMContentLoaded', () => {
 					while (rowBeginCountdown.firstChild) {
 						rowBeginCountdown.removeChild(rowBeginCountdown.firstChild);
 					}
-					let scoreText = document.createElement('h1');
+					let scoreText = document.createElement('p');
 					scoreText.className = 'score-text';
 					scoreText.textContent = `Your score is: ${score}!`;
 
-					let timerElement = document.createElement('h3');
+					let timerElement = document.createElement('p');
 					timerElement.textContent = `Time left: ${timerText} seconds`;
 
-					let matchesElement = document.createElement('h3');
+					let matchesElement = document.createElement('p');
 					matchesElement.textContent = `Total matches: ${matchedIds.length}`;
 
-					let clickCountElement = document.createElement('h3');
+					let clickCountElement = document.createElement('p');
 					clickCountElement.textContent = `Total mouse clicks: ${clickCount}`;
 
 					rowBeginCountdown.appendChild(timerElement);
@@ -253,7 +253,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			progressBar.max = maxTime;
 			timerDiv.appendChild(progressBar);
 
-			let timeText = document.createElement('p');
+			let timeText = document.createElement('h3');
 			timeText.innerHTML = `Timer ${timeLeft} seconds`;
 			timerDiv.appendChild(timeText);
 
