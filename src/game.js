@@ -1,7 +1,8 @@
 window.addEventListener('DOMContentLoaded', () => {
 	const penguinsURL = 'http://localhost:3000/api/v1/penguins';
 	// let penguinIds; // eight ids in random order
-	const penguinURLs = [];
+	const penguinIdURLs = {};
+	const penguinInfo = {};
 
 	const cards = document.querySelectorAll('.card');
 	let clickCount = 0;
@@ -13,6 +14,8 @@ window.addEventListener('DOMContentLoaded', () => {
 	// const headerContainer = document.querySelector('.header-container');
 	const row_begin_countdown = document.querySelector('.row-begin-countdown');
 	const startButton = document.querySelector('#btn-start-game');
+	const matchedContainer = document.querySelector('.matched-container');
+
 	startButton.addEventListener('click', startGame);
 
 	async function startGame() {
@@ -42,22 +45,33 @@ window.addEventListener('DOMContentLoaded', () => {
 		twoElements.push(this);
 		testMatch.push(currentCardPenguinId);
 		timeOut1s = window.setTimeout(evaluateMatch, 1000);
-
-		console.log(clickCount);
 	}
 
 	function evaluateMatch() {
 		if (testMatch.length === 2) {
 			if (testMatch[0] === testMatch[1]) {
 				matchedIds.push(testMatch[0]);
-				// twoMatches = document.querySelectorAll(
-				// 	`[penguin_id='${testMatch[0]}']`
-				// );
-
 				twoElements.forEach((card) => card.remove());
+				let newMatch = document.createElement('div');
+				let newMatchImage = document.createElement('img');
+				newMatchImage.setAttribute('src', penguinIdURLs[testMatch[0]]);
+				newMatchImage.height = 100;
+				newMatchImage.width = 100;
+				newMatch.appendChild(newMatchImage);
+
+				let newMatchSpecies = document.createElement('a');
+				newMatchSpecies.innerText = penguinInfo[testMatch[0]]['species'];
+				newMatchSpecies.href = penguinInfo[testMatch[0]]['link'];
+				newMatch.appendChild(newMatchSpecies);
+
+				let newMatchDesc = document.createElement('p');
+				newMatchDesc.textContent = penguinInfo[testMatch[0]]['description'];
+				newMatch.appendChild(newMatchDesc);
+				newMatch.className = 'matched-card';
+				matchedContainer.appendChild(newMatch);
 				testMatch.splice(0, 2);
 				twoElements.splice(0, 2);
-				console.log(matchedIds);
+				// console.log(matchedIds);
 			} else if (testMatch[0] !== testMatch[1]) {
 				// noMatches = document.querySelectorAll(`[penguin_id='${testMatch[0]}']`);
 
@@ -81,6 +95,8 @@ window.addEventListener('DOMContentLoaded', () => {
 		let eightIndices = [];
 
 		json.forEach((penguin) => {
+			penguinInfo[penguin.id] = penguin;
+			console.log(penguinInfo);
 			allIds.push(penguin.id);
 		});
 
@@ -97,12 +113,13 @@ window.addEventListener('DOMContentLoaded', () => {
 	async function getRandomIdURLs() {
 		const penguinIds = await fetchEightPenguins();
 		const penguinURLs = await fetchEightImageURLs(penguinIds);
-		const idURLs8 = [];
+		let idURLs8 = [];
 		for (let i = 0; i < penguinIds.length; i++) {
-			const pair = {};
+			pair = {};
 			pair['id'] = penguinIds[i];
 			pair['url'] = await getOneImageURL(penguinIds[i]);
 			idURLs8.push(pair);
+			// idURLPairs[penguinIds[i]] = pair['url'];
 		}
 		const idURLs16 = idURLs8.concat(idURLs8);
 		const shuffled = shuffle(idURLs16);
@@ -119,11 +136,12 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	async function fetchEightImageURLs(penguinIds) {
+		// let penguinURLs = {};
 		for (let i = 0; i < penguinIds.length; i++) {
 			const penguinURL = await getOneImageURL(penguinIds[i]);
-			penguinURLs.push(penguinURL);
+			penguinIdURLs[penguinIds[i]] = penguinURL;
 		}
-		return penguinURLs;
+		return penguinIdURLs;
 	}
 
 	async function getOneImageURL(penguinId) {
@@ -181,7 +199,11 @@ window.addEventListener('DOMContentLoaded', () => {
 					clearInterval(countdownTimer);
 					flipCards();
 					if (maxTime === 5) {
-						timeOut1s = window.setTimeout(startMatching, 1000);
+						timeOut1s = window.setTimeout(startMatching, 500);
+					}
+					if (maxTime === 30) {
+						alert('game over!');
+						cards.forEach((card) => card.removeEventListener('click', flip));
 					}
 					resolve(true);
 				}
