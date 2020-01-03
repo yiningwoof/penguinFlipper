@@ -41,7 +41,11 @@ body {
 	margin: 15% auto; /* 15% from the top and centered */
 	padding: 20px;
 	border: 1px solid #888;
-	width: 80%; /* Could be more or less, depending on screen size */
+	width: 25%; /* Could be more or less, depending on screen size */
+	justify-content: center;
+}
+
+#rank-board-table {
 	text-align: center;
 }
 
@@ -66,8 +70,8 @@ body {
 	height: 100%;
 	margin: 0 auto;
 	display: grid;
-	grid-template-columns: 20% 60% 20%;
-	grid-template-rows: 15% 85%;
+	grid-template-columns: 25% 50% 25%;
+	grid-template-rows: 20% 80%;
 	/* position: relative;
 	top: 0;
 	right: 0;

@@ -5,7 +5,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	// let penguinIds; // eight ids in random order
 	const penguinIdURLs = {};
 	const penguinInfo = {};
-	const topFive = {};
+	let topFive = [];
 
 	const cards = document.querySelectorAll('.card');
 	let clickCount = 0;
@@ -357,28 +357,42 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function showRankBoard() {
-		const ranks = {};
 		rankBoardButton.onclick = function() {
 			rankModal.style.display = 'block';
 		};
-		// <tr>
-		// 	<td>Bob</td>
-		// 	<td>Yellow</td>
-		// </tr>;
 		fetch(gamesURL)
 			.then((res) => res.json())
 			.then(getTopFive);
+		while (rankModalTable.firstChild) {
+			rankModalTable.removeChild(rankModalTable.firstChild);
+		}
+		topFive.forEach((score) => {
+			let tableRow = document.createElement('tr');
+			let name = document.createElement('td');
+			name.textContent = score.username;
+			let playerScore = document.createElement('td');
+			playerScore.textContent = score.score;
+
+			tableRow.appendChild(name);
+			tableRow.appendChild(playerScore);
+
+			rankModalTable.appendChild(tableRow);
+		});
 		// rankModalTable.appendChild()
 		rankModalClose.onclick = function() {
 			rankModal.style.display = 'none';
 		};
 	}
+	// <tr>
+	// 	<td>Bob</td>
+	// 	<td>Yellow</td>
+	// </tr>;
 
 	function getTopFive(json) {
 		json.sort((a, b) => {
 			return b.score - a.score;
 		});
-		console.log(json.slice(0, 5));
+		topFive = json.slice(0, 5);
 	}
 
 	getUserLoginModal();
