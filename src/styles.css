@@ -118,11 +118,12 @@ body {
 	transform: scale(0.97);
 	transition: transform 0.2s;
 }
-.footer-container {
+.matched-container {
 	background: #db8a8a;
 	/* bottom: 0; */
 	/* clear: both; */
-	height: 200px;
+	/* height: 200px; */
 	width: 640px;
 	margin: auto;
+	padding: 20px;
 }
