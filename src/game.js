@@ -6,17 +6,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	const cards = document.querySelectorAll('.card');
 	let clickCount = 0;
+	let timerText = 0;
+	let score = 0;
 	let testMatch = [];
 	let twoElements = [];
 	let matchedIds = [];
 
+	let faceDown = true;
+
 	const cardIndices = [...Array(16).keys()];
 	// const headerContainer = document.querySelector('.header-container');
-	const row_begin_countdown = document.querySelector('.row-begin-countdown');
+	const rowBeginCountdown = document.querySelector('.row-begin-countdown');
 	const startButton = document.querySelector('#btn-start-game');
+	const newGameButton = document.querySelector('#btn-new-game');
 	const matchedContainer = document.querySelector('.matched-container');
 
 	startButton.addEventListener('click', startGame);
+	newGameButton.addEventListener('click', startGame)
 
 	async function startGame() {
 		await assignPenguinsToCards();
@@ -26,13 +32,17 @@ window.addEventListener('DOMContentLoaded', () => {
 	function showAllCards() {
 		flipCards();
 		progressCountDown(5, 5);
+		if (document.querySelector('.click-count')) {
+			document.querySelector('.click-count').remove();
+		}
 		clickCountText = document.createElement('p');
 		clickCountText.className = 'click-count';
-		row_begin_countdown.appendChild(clickCountText);
+		rowBeginCountdown.appendChild(clickCountText);
 		clickCountText.textContent = `Click Count: ${clickCount}`;
 	}
 
 	function flipCards() {
+		faceDown = !faceDown;
 		cards.forEach((card) => card.classList.toggle('flip'));
 	}
 
@@ -52,6 +62,31 @@ window.addEventListener('DOMContentLoaded', () => {
 			if (testMatch[0] === testMatch[1]) {
 				matchedIds.push(testMatch[0]);
 				twoElements.forEach((card) => card.remove());
+				if (document.querySelectorAll(".card").length === 0) {
+					timerText = document.querySelector('progress').value;
+					score = calculateScore(matchedIds.length, timerText, clickCount);
+					while (rowBeginCountdown.firstChild) {
+						rowBeginCountdown.removeChild(rowBeginCountdown.firstChild);
+					}
+					let scoreText = document.createElement('h1');
+					scoreText.className = 'score-text';
+					scoreText.textContent = `Your score is: ${score}!`;
+
+					let timerElement = document.createElement('h3');
+					timerElement.textContent = `Time left: ${timerText} seconds`;
+
+					let matchesElement = document.createElement('h3');
+					matchesElement.textContent = `Total matches: ${matchedIds.length}`;
+
+					let clickCountElement = document.createElement('h3');
+					clickCountElement.textContent = `Total mouse clicks: ${clickCount}`;
+					
+					rowBeginCountdown.appendChild(timerElement);
+					rowBeginCountdown.appendChild(matchesElement);
+					rowBeginCountdown.appendChild(clickCountElement);
+					rowBeginCountdown.appendChild(scoreText);
+				}
+
 				let newMatch = document.createElement('div');
 				let newMatchImage = document.createElement('img');
 				newMatchImage.setAttribute('src', penguinIdURLs[testMatch[0]]);
@@ -82,6 +117,11 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
+	function calculateScore(matches, timeLeft, clicks) {
+		score = 10 * (10 * matches + timeLeft - clicks);
+		return score;
+	}
+
 	async function fetchEightPenguins() {
 		const res = await fetch(penguinsURL);
 
@@ -96,7 +136,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 		json.forEach((penguin) => {
 			penguinInfo[penguin.id] = penguin;
-			console.log(penguinInfo);
 			allIds.push(penguin.id);
 		});
 
@@ -202,8 +241,32 @@ window.addEventListener('DOMContentLoaded', () => {
 						timeOut1s = window.setTimeout(startMatching, 500);
 					}
 					if (maxTime === 30) {
-						alert('game over!');
-						cards.forEach((card) => card.removeEventListener('click', flip));
+						if (score === 0) {
+							score = calculateScore(matchedIds.length, 0, clickCount);
+							alert("Time is up!")
+							cards.forEach((card) => card.removeEventListener('click', flip));
+							while (rowBeginCountdown.firstChild) {
+								rowBeginCountdown.removeChild(rowBeginCountdown.firstChild);
+							}
+							let scoreText = document.createElement('h1');
+							scoreText.className = 'score-text';
+							scoreText.textContent = `Your score is: ${score}!`;
+							rowBeginCountdown.appendChild(scoreText);
+
+							let timerElement = document.createElement('h3');
+							timerElement.textContent = `Time left: ${timerText} s`;
+		
+							let matchesElement = document.createElement('h3');
+							matchesElement.textContent = `Total matches: ${matchedIds.length}`;
+		
+							let clickCountElement = document.createElement('h3');
+							clickCountElement.textContent = `Total mouse clicks: ${clickCount}`;
+							
+							rowBeginCountdown.appendChild(timerElement);
+							rowBeginCountdown.appendChild(matchesElement);
+							rowBeginCountdown.appendChild(clickCountElement);
+							rowBeginCountdown.appendChild(scoreText);
+						}
 					}
 					resolve(true);
 				}
