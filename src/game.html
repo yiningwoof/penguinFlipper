@@ -12,26 +12,27 @@
 </head>
 
 <body>
-<!-- The Modal -->
-<div id="myModal" class="modal">
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
 
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h3>Welcome To Penguin Flipper!</h3> <br>
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Welcome To Penguin Flipper!</h3> <br>
       <p>Rules: you will have 5 seconds to look at the pictures then you will have 30 seconds to match cards.</p><br>
-      <form id="user-form">
-        <input id="user_input" type="text" name="user" placeholder="create new game"/>
-        <input type="submit" value="Submit"/>
+      <form id="login-form">
+        <input id="username" type="text" placeholder="Your username" />
+        <input type="submit" value="Let's get started!" />
       </form>
-      
-  </div>
+
+    </div>
   </div>
 
 
   <div class="game-page">
     <div class="header-container">
       <h1 class="page-title">Penguin Flipper</h1><br>
+      <h2 id="welcome"></h2>
       <button id="btn-start-game">Start Game</button>
       <button id="btn-new-game">Start Over</button>
       <div class="row-begin-countdown">
