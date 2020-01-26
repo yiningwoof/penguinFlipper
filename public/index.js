@@ -22,7 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	const rowBeginCountdown = document.querySelector('.row-begin-countdown');
 	const startButton = document.querySelector('#btn-start-game');
 	const newGameButton = document.querySelector('#btn-new-game');
-	const switchUserButton = document.querySelector('#btn-switch-user');
 	const rankBoardButton = document.querySelector('#btn-show-rank');
 	const matchedContainer = document.querySelector('.matched-container');
 
@@ -39,12 +38,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	startButton.addEventListener('click', startGame);
 	newGameButton.addEventListener('click', startNewGame);
-	switchUserButton.addEventListener('click', switchUser);
 	rankBoardButton.addEventListener('click', showRankBoard);
 	loginForm.addEventListener('submit', userLogin);
 
 	async function startNewGame() {
-		modal.style.display = 'none';
+		modal.remove();
 		let keepUserName = userName;
 		console.log(keepUserName);
 		window.location.reload(true);
@@ -337,6 +335,10 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function getUserLoginModal() {
+		newGameButton.onclick = function() {
+			modal.style.display = 'none';
+			// userName =
+		};
 		window.onload = function() {
 			modal.style.display = 'block';
 		};

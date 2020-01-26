@@ -1,24 +1,49 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
-development:
+# # SQLite version 3.x
+# #   gem install sqlite3
+# #
+# #   Ensure the SQLite 3 gem is defined in your Gemfile
+# #   gem 'sqlite3'
+# #
+# default: &default
+#   adapter: sqlite3
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   timeout: 5000
+
+# development:
+#   <<: *default
+#   database: db/development.sqlite3
+
+# # Warning: The database defined as "test" will be erased and
+# # re-generated from your development database when you run "rake".
+# # Do not set this db to the same as development or production.
+# test:
+#   <<: *default
+#   database: db/test.sqlite3
+
+# production:
+#   <<: *default
+#   database: db/production.sqlite3
+
+default: &default
   adapter: postgresql
   encoding: unicode
-  database: penguin_flipper_development_2_0
-  pool: 5
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: penguin_flipper_dev # change
   host: localhost
-  port: 5432
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-
-
+  user: postgres
+  password:
+  port: 5433
 
 production:
-  adapter: postgresql
-  database: penguin_flipper_production_2_0
-  prepared_statements: false
-  advisory_locks: false
+  <<: *default
+  database: penguin_flipper_prod # change
+  # username: postgresql # change
+  # password: <%= ENV['XXX_DATABASE_PASSWORD'] %> # change
+# This database is erased and regenerated on testing.
+# Don't point it to the same database as dev or prod.
+# test:
+#   <<: *default
+#   database: penguin_flipper_test # change
