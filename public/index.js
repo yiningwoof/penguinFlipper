@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
 	let userName = '';
-	const penguinsURL = 'http://localhost:3000/api/v1/penguins';
-	const gamesURL = 'http://localhost:3000/api/v1/games';
+	const penguinsURL = 'penguin-flipper-api.herokuapp.com';
+	const gamesURL = 'penguin-flipper-api.herokuapp.com/api/v1/games';
 	// let penguinIds; // eight ids in random order
 	const penguinIdURLs = {};
 	const penguinInfo = {};
@@ -222,7 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	async function getOneImageURL(penguinId) {
 		const res = await fetch(
-			`http://localhost:3000/api/v1/penguin_pictures/${penguinId}`
+			`penguin-flipper-api.herokuapp.com/api/v1/penguin_pictures/${penguinId}`
 		);
 		const json = await res.json();
 		const imageArr = json['penguin_pics'];
