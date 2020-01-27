@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
 	let userName = '';
-	const penguinsURL = 'http://localhost:3000/api/v1/penguins';
-	const gamesURL = 'http://localhost:3000/api/v1/games';
+	const penguinsURL = 'https://penguin-flipper-api.herokuapp.com/';
+	const gamesURL = 'https://penguin-flipper-api.herokuapp.com/api/v1/games';
 	// let penguinIds; // eight ids in random order
 	const penguinIdURLs = {};
 	const penguinInfo = {};
@@ -22,7 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	const rowBeginCountdown = document.querySelector('.row-begin-countdown');
 	const startButton = document.querySelector('#btn-start-game');
 	const newGameButton = document.querySelector('#btn-new-game');
-	const switchUserButton = document.querySelector('#btn-switch-user');
 	const rankBoardButton = document.querySelector('#btn-show-rank');
 	const matchedContainer = document.querySelector('.matched-container');
 
@@ -39,12 +38,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	startButton.addEventListener('click', startGame);
 	newGameButton.addEventListener('click', startNewGame);
-	switchUserButton.addEventListener('click', switchUser);
 	rankBoardButton.addEventListener('click', showRankBoard);
 	loginForm.addEventListener('submit', userLogin);
 
 	async function startNewGame() {
-		modal.style.display = 'none';
+		modal.remove();
 		let keepUserName = userName;
 		console.log(keepUserName);
 		window.location.reload(true);
@@ -224,7 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	async function getOneImageURL(penguinId) {
 		const res = await fetch(
-			`http://localhost:3000/api/v1/penguin_pictures/${penguinId}`
+			`httpss://penguin-flipper-api.herokuapp.com/api/v1/penguin_pictures/${penguinId}`
 		);
 		const json = await res.json();
 		const imageArr = json['penguin_pics'];
@@ -337,6 +335,10 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function getUserLoginModal() {
+		newGameButton.onclick = function() {
+			modal.style.display = 'none';
+			// userName =
+		};
 		window.onload = function() {
 			modal.style.display = 'block';
 		};
